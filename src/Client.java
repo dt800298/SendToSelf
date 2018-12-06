@@ -4,15 +4,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class Sender {
-	public static void main(String[]args) throws IOException, ParseException{
+public class Client {
+	public static void main(String[]args){
 		String FILE_PATH = "File.json";
 		String a = "";
 		JSONParser parser = new JSONParser();
@@ -33,27 +32,18 @@ public class Sender {
 			System.err.println("JSON Simple was not able to parse the file");
 			pe.printStackTrace();
 		}
-		
-		
-	
 	      try {
-	         ServerSocket srvr = new ServerSocket(5801);
-	         Socket skt = srvr.accept();
-	         System.out.print("Server has connected!\n");
-	         Thread.sleep(100);
-	         BufferedReader in = new BufferedReader(new InputStreamReader(skt.getInputStream()));
-	         System.out.print("Received string: '");
-	         while (!in.ready()) {}
-	          System.out.println(in.readLine()); // Read one line and output it
-
-	          System.out.print("'\n");
-	          in.close();
-	         skt.close();
-	         srvr.close();
-	      }
-	      catch(Exception e) {
-	         e.printStackTrace();
-	      }
+	          Socket skt = new Socket("10.5.48.78", 5801);
+	          System.out.print("Server has connected!\n");
+		         PrintWriter out = new PrintWriter(skt.getOutputStream(), true);
+		         System.out.print("Sending string: '" + a + "'\n");
+		         out.print(a);
+		         out.close();
+		         skt.close();
+	       }
+	       catch(Exception e) {
+	          System.out.print("Whoops! It didn't work!\n");
+	       }
+	      
 	}
-
 }
